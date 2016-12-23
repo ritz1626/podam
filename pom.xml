@@ -10,17 +10,20 @@
 
 	<groupId>uk.co.jemos.podam</groupId>
 	<artifactId>podam</artifactId>
-	<version>6.0.2-SNAPSHOT</version>
+	<version>7.0.5-SNAPSHOT</version>
 	<name>podam</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<serenity.version>1.0.59</serenity.version>
-		<spring.version>4.1.6.RELEASE</spring.version>
-        <spring.integration.version>4.1.3.RELEASE</spring.integration.version>
+		<serenity.version>1.1.42</serenity.version>
+		<spring.version>4.3.3.RELEASE</spring.version>
+		<log4j.version>2.7</log4j.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<github.global.server>github</github.global.server>
 	</properties>
 
-	<url>http://mtedone.github.io/podam/</url>
+	<url>http://devopsfolks.github.io/podam/</url>
 	<licenses>
 		<license>
 			<name>Podam runs under the MIT license</name>
@@ -47,8 +50,8 @@
 	</mailingLists>
 
 	<scm>
-		<url>scm:git clone git://github.com/mtedone/podam.git</url>
-		<connection>scm:git clone git://github.com/mtedone/podam.git</connection>
+		<url>scm:git clone git@github.com:devopsfolks/podam.git</url>
+		<connection>scm:git clone git://github.com/devopsfolks/podam.git</connection>
 	</scm>
 
 	<developers>
@@ -133,6 +136,13 @@
 				<role>Developer</role>
 			</roles>
 		</contributor>
+        <contributor>
+            <name>Francoise-Xavier Bonnet</name>
+            <email>francoise.bonnet@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
 	</contributors>
 
 
@@ -157,6 +167,18 @@
 		</extensions>
 		<plugins>
 			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
@@ -169,6 +191,14 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<attach>true</attach>
 					<show>private</show>
@@ -182,6 +212,22 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.3</version>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<configuration>
+					<message>Creating site for ${project.version}</message>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site</phase>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -241,49 +287,35 @@
 						</goals>
 					</execution>
 				</executions>
- 			</plugin>
- 			<plugin>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.4.201502262128</version>
+				<version>0.7.6.201602180812</version>
 				<executions>
 					<execution>
-						<id>default-prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
- 						</goals>
- 					</execution>
-					<execution>
-						<id>default-report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
 						</goals>
 					</execution>
 					<execution>
-						<id>default-check</id>
+						<id>report</id>
+						<phase>verify</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>report</goal>
 						</goals>
-						<configuration>
-							<rules>
-							</rules>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.11</version>
-				<configuration>
-				 <skip>false</skip> 
-	                        </configuration>
+				<version>2.11</version>				
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.11</version>
-				<configuration>					
+				<configuration>
 					<includes>
 						<include>**/*Test.java</include>
 						<include>**/Test*.java</include>
@@ -357,7 +389,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.4.201502262128</version>
+				<version>0.7.6.201602180812</version>
 			</plugin>
 			<plugin>
 				<groupId>net.serenity-bdd.maven.plugins</groupId>
@@ -367,9 +399,17 @@
 		</plugins>
 	</reporting>
 	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 		<site>
 			<id>github-project-site</id>
-			<url>gitsite:git@github.com/mtedone/podam.git</url>
+			<url>gitsite:git@github.com/devopsfolks/podam.git</url>
 		</site>
 	</distributionManagement>
 
@@ -382,7 +422,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.12</version>
+			<version>1.7.21</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.annotation</groupId>
@@ -393,6 +433,11 @@
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
 		</dependency>
 
 		<!-- Testing dependencies -->
@@ -411,51 +456,35 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.3</version>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-jcl</artifactId>
-			<version>2.2</version>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.3</version>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.1</version>
-</dependency>
- <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>2.4</version>
-    </dependency>
-		<!-- Spring framework -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-messaging</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.2.0.Final</version>
+			<version>5.3.0.Final</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- Spring framework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -463,20 +492,9 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.integration</groupId>
-            <artifactId>spring-integration-core</artifactId>
-            <version>${spring.integration.version}</version>
-        </dependency>
 
 
 		<!-- Serenity-BDD -->
-		<dependency>
-			<groupId>net.serenity-bdd</groupId>
-			<artifactId>serenity-core</artifactId>
-			<version>${serenity.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>net.serenity-bdd</groupId>
 			<artifactId>serenity-junit</artifactId>
@@ -487,12 +505,12 @@
 
 	<profiles>
 		<profile>
-			<id>doclint-java8-disable</id>
+			<id>doclint-java8</id>
 			<activation>
 				<jdk>[1.8,)</jdk>
 			</activation>
 			<properties>
-				<javadoc.opts>-Xdoclint:none</javadoc.opts>
+				<javadoc.opts>-Xdoclint:all</javadoc.opts>
 			</properties>
 		</profile>
 	</profiles>

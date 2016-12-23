@@ -402,20 +402,13 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
+<distributionManagement>
 		<site>
 			<id>github-project-site</id>
-			<url>gitsite:git@github.com/devopsfolks/podam.git</url>
+			<url>gitsite:git@github.com/mtedone/podam.git</url>
 		</site>
 	</distributionManagement>
+
 
 	<dependencies>
 		<dependency>

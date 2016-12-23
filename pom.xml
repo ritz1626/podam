@@ -409,7 +409,7 @@
 		</repository>
 		<site>
 			<id>github-project-site</id>
-			<url>gitsite:git@github.com/devopsfolks/podam.git</url>
+			<url>gitsite:git@github.com/mtedone/podam.git</url>
 		</site>
 	</distributionManagement>
 
